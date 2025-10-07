@@ -68,13 +68,6 @@ function hashPassword(password){
 }
 
 exports.registerUser = async (req, res, next)=>{
-    let query = `SELECT * FROM users WHERE email = "${req.body.email}"`
-    let result = await db.promise().query(query)
-    let users = result[0];
-    if(users.length != 0){
-        res.status(403).json({ error: "User with this email already exists!" });
-        return;
-    }
     let verification_token = crypto.randomBytes(10).toString('hex');
     const newUser = {
         name: req.body.name,
@@ -88,21 +81,38 @@ exports.registerUser = async (req, res, next)=>{
         updated_at: new Date(Date.now()),
     }
 
-
-    sendVerifyEmail(newUser.email, newUser.verification_token);
     query = `INSERT INTO users (name, password, email, role, last_visit, verification_token, created_at, updated_at) VALUES (?, ?, ?, ?, ? , ?, ?, ?)`
+    let isValid = true;
+    let errMessage = '';
     await db.execute(query, [newUser.name, newUser.password, newUser.email, newUser.role, newUser.last_visit, newUser.verification_token, newUser.created_at, newUser.updated_at], function(err, result){
-        console.log(err)
-        res.status(200).send({
-        status: "success",
-        data: {
-            id: result.insertId,
-            username: newUser.name,
-            email: newUser.email,
-            role: newUser.role,
-            verified: newUser.verified,
+        if(err){
+            if(err.errno && err.errno == 1062){
+                isValid = false;
+                errMessage = 'User with this email already exists!'
+            }else{
+                isValid = false;
+                errMessage = 'Server error, please try again later'
             }
-        })
+        }else{
+            sendVerifyEmail(newUser.email, newUser.verification_token);
+        }
+        if(isValid){
+        res.status(200).send({
+            status: "success",
+            data: {
+                id: result.insertId,
+                username: newUser.name,
+                email: newUser.email,
+                role: newUser.role,
+                verified: newUser.verified,
+                }
+            })
+        }else{
+            res.status(403).send({
+                status: "error",
+                error: errMessage
+            });
+        }
     })
 }
 
