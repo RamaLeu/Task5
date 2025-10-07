@@ -1,0 +1,97 @@
+.main-window{
+    .main-header{
+        color: white;
+        background-color: #212529;
+    }
+}
+
+.table{
+    border-radius: 200px;
+    thead{
+        color: white;
+        background-color: #212529;
+    }
+    th{
+        user-select: none;
+    }
+}
+.title-container{
+    font-size: clamp(24px, 2vw, 36px);
+    font-weight: bold;
+}
+.form-check-input{
+    border: 1px solid #21252982;
+}
+.toolbar{
+    display: flex;
+    justify-content: space-between;
+    background-color: #f6f8f8;
+    align-items: center;
+    height: 50px;
+    .toolbar-segment{
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        height: 100%;
+        .custom-button{
+            padding: 4px 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 4px;
+            height: 100%;
+            box-sizing: border-box;
+            flex-grow: 1;
+            gap: 4px;
+            cursor: pointer;
+            transition: 0.25s;
+            svg{
+                transition: 0.25s;
+            }
+            &.block-btn{
+                border: 1px solid #6b91f8;
+                color: #6b91f8;
+                &:hover{
+                    background-color: #002486;
+                    color: white;
+                    border: 1px solid #002486;
+                    svg{
+                        fill: white;
+                    }
+                }
+            }
+            &.delete-btn{
+                border: 1px solid #bd3d43;
+                &:hover{
+                    background-color: #95020a;
+                    color: white;
+                    border: 1px solid #95020a;
+                    svg{
+                        fill: white;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.email-unverified{
+    color: red;
+    font-size: 12px;
+    flex-wrap: wrap;
+}
+
+@media(max-width: 768px){
+    table{
+        th{
+            font-size: 12px;
+        }
+    }
+    .user-info{
+        font-size: 12px;
+        text-align: center;
+    }
+}
+.bold{
+    font-weight: bold;
+}
